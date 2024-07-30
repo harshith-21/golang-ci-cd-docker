@@ -87,3 +87,7 @@ tar xzf go1.22.5.linux-amd64.tar.gz
 
 # and adding following to .bashrc for for root user to access go, for jenkins we an export when needed
 export PATH=$PATH:/opt/go/bin
+
+# Also add user jenkins to docker group
+sudo usermod -aG docker jenkins
+```

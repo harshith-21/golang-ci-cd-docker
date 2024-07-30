@@ -37,7 +37,7 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    sh "docker run -d -p ${EXPOSED_SERVER_PORT}:${EXPOSED_SERVER_PORT}--name ${DOCKER_IMAGE} ${DOCKER_IMAGE}"
+                    sh "docker run -d -p ${EXPOSED_SERVER_PORT}:${EXPOSED_SERVER_PORT} --name ${DOCKER_IMAGE} ${DOCKER_IMAGE}"
                 }
             }
         }
