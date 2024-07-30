@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = "go-application-${env.GIT_COMMIT}"
+        PATH = "${env.PATH}:/opt/go/bin"
     }
 
     stages {
@@ -19,7 +20,7 @@ pipeline {
         stage('Compile Go Application') {
             steps {
                 dir('app') {
-                    sh 'go build -o app-binary'
+                    sh 'export PATH=$PATH:/opt/go/bin && go build -o app-binary'
                 }
             }
         }
