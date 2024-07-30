@@ -78,3 +78,12 @@ sudo systemctl start docker
 
 ## **DEVELOPMENT**
 
+Install go with
+
+```sh
+cd /opt/
+wget https://go.dev/dl/go1.22.5.linux-amd64.tar.gz
+tar xzf go1.22.5.linux-amd64.tar.gz
+
+# and adding following to .bashrc for for root user to access go, for jenkins we an export when needed
+export PATH=$PATH:/opt/go/bin
