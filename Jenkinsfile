@@ -4,6 +4,9 @@ pipeline {
     environment {
         DOCKER_IMAGE = "go-application-${env.GIT_COMMIT}"
         PATH = "${env.PATH}:/opt/go/bin"
+        EXPOSED_SERVER_PORT = 4000
+        HOST_NAME = "${env.HOSTNAME}"
+        APP_URL = "${HOST_NAME}:${EXPOSED_SERVER_PORT}"
     }
 
     stages {
@@ -34,15 +37,19 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    sh "docker run -d -p 4000:4000 --name ${DOCKER_IMAGE} ${DOCKER_IMAGE}"
+                    sh "docker run -d -p ${EXPOSED_SERVER_PORT}:${EXPOSED_SERVER_PORT}--name ${DOCKER_IMAGE} ${DOCKER_IMAGE}"
                 }
             }
         }
     }
 
     post {
+        always {
+            script {
+                currentBuild.description = "Build details: <a href='${APP_URL}'>Click here</a>"
+            }
+        }
         cleanup {
             cleanWs()
         }
-    }
 }
