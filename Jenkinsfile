@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE = "go-application-${env.GIT_COMMIT}"
         PATH = "${env.PATH}:/opt/go/bin"
         EXPOSED_SERVER_PORT = 4000
-        HOST_NAME = "${env.HOSTNAME}"
+        HOST_NAME = sh(script: "hostname -f", returnStdout: true).trim()
         APP_URL = "${HOST_NAME}:${EXPOSED_SERVER_PORT}"
     }
 

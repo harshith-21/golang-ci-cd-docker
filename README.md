@@ -90,4 +90,5 @@ export PATH=$PATH:/opt/go/bin
 
 # Also add user jenkins to docker group
 sudo usermod -aG docker jenkins
+service jenkins restart
 ```
