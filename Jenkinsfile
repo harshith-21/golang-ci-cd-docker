@@ -1,32 +1,47 @@
 pipeline {
     agent any
-    
+
+    environment {
+        DOCKER_IMAGE = "go-application-${env.GIT_COMMIT}"
+    }
+
     stages {
-        stage('Build') {
+        stage('Clean Previous Container') {
             steps {
-                echo 'Starting the build stage...'
-                // Add your build steps here
+                script {
+                    def previousContainer = sh(script: "docker ps -q --filter name=go-application-", returnStdout: true).trim()
+                    if (previousContainer) {
+                        sh "docker rm -f ${previousContainer}"
+                    }
+                }
             }
         }
-        
-        stage('Test') {
+        stage('Compile Go Application') {
             steps {
-                echo 'Hello'
-                // Add your test steps here
+                dir('app') {
+                    sh 'go build -o app-binary'
+                }
             }
         }
-        
-        stage('Deploy') {
+        stage('Build Docker Image') {
             steps {
-                echo 'Starting the deploy stage...'
-                // Add your deploy steps here
+                script {
+                    def dockerImage = docker.build(DOCKER_IMAGE, '-f Dockerfile .')
+                }
+            }
+        }
+        stage('Run Docker Container') {
+            steps {
+                script {
+                    sh "docker run -d -p 4000:4000 --name ${DOCKER_IMAGE} ${DOCKER_IMAGE}"
+                }
             }
         }
     }
-    
+
     post {
-        always {
-            echo 'Pipeline finished.'
+        cleanup {
+            cleanWs()
         }
     }
 }
